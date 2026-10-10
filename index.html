@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Event Management System</title>
+<style>
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f2fa;
+    color: #333;
+}
+
+/* HEADER */
+.header {
+    background: #6a1b9a;
+    color: white;
+    padding: 25px 40px;
+    text-align: center;
+}
+.header h1 {
+    margin: 0;
+    font-size: 32px;
+}
+.header p {
+    margin: 8px 0 0;
+    color: #eadcf2;
+}
+
+/* MAIN LAYOUT */
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+/* TOP SECTION */
+.top-section {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 25px;
+    align-items: start;
+}
+/* BOX */
+.box {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-top: 5px solid #8e24aa;
+}
+.box h2 {
+    margin-top: 0;
+    color: #6a1b9a;
+}
+
+/* REGISTER FORM */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / 3;
+}
+
+/* Register form heading */
+.box:has(#name) h2 {
+    color: #72008f;
+    font-size: 2rem;
+}
+
+/* Form labels */
+label {
+    font-weight: 400;
+    margin-bottom: 6px;
+    color: #171217;
+}
+
+/* Input fields, dropdown, and description */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    background: #f5dffc;
+    border: 1px solid #ead1f0;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #332638;
+    outline: none;
+    box-shadow: 0 2px 3px rgba(64, 25, 70, 0.18);
+    box-sizing: border-box;
+}
+
+/* Focus effect */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #a020c0;
+    box-shadow: 0 0 5px rgba(160, 32, 192, 0.3);
+}
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+    color: #9b8da0;
+    opacity: 1;
+}
+
+/* Event description */
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Secure Event Slot button */
+.box:has(#name) .form-button {
+    background: #9200b5;
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    box-shadow: 0 2px 3px rgba(64, 25, 70, 0.28);
+    cursor: pointer;
+}
+
+.box:has(#name) .form-button:hover {
+    background: #7b0099;
+}
+
+/* BUTTON */
+button {
+    background: #8e24aa;
+    color: white;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+button:hover {
+    background: #6a1b9a;
+}
+.form-button {
+    margin-top: 18px;
+}
+
+/*  MESSAGE */
+#message {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+/* CALENDAR */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.calendar-header h3 {
+    color: #6a1b9a;
+    margin: 0;
+}
+.calendar-header button {
+    padding: 8px 13px;
+}
+.weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 5px;
+}
+.weekdays div {
+    text-align: center;
+    font-weight: bold;
+    color: #6a1b9a;
+    padding: 8px 2px;
+}
+.calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+}
+.day {
+    min-height: 50px;
+    padding: 10px 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fafafa;
+    cursor: pointer;
+}
+.day:hover {
+    background: #f0ddf5;
+}
+.empty-day {
+    background: transparent;
+    border: none;
+    cursor: default;
+}
+
+/* RESERVED DATE */
+.booked {
+    background: #8e24aa !important;
+    color: white;
+    font-weight: bold;
+    cursor: not-allowed;
+}
+
+/* SELECTED DATE */
+.selected {
+    background: #e1bee7 !important;
+    border: 2px solid #6a1b9a;
+}
+
+/* TODAY */
+.today {
+    border: 2px solid #ab47bc;
+    font-weight: bold;
+}
+
+/* LEGEND */
+.legend {
+    display: flex;
+    gap: 20px;
+    margin-top: 15px;
+    font-size: 14px;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.legend-box {
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+}
+.legend-booked {
+    background: #8e24aa;
+}
+.legend-available {
+    background: #fafafa;
+    border: 1px solid #ccc;
+}
+
+
+/* HISTORY */
+.history-box {
+    margin-top: 25px;
+}
+.reservation {
+    border: 1px solid #ddd;
+    border-left: 5px solid #8e24aa;
+    padding: 18px;
+    margin-top: 12px;
+    border-radius: 7px;
+    background: #fafafa;
+}
+.reservation h3 {
+    margin: 0 0 8px;
+    color: #6a1b9a;
+}
+.reservation p {
+    margin: 5px 0;
+}
+.secured {
+    color: #6a1b9a;
+    font-weight: bold;
+}
+.empty {
+    color: #777;
+    padding: 15px 0;
+}
+
+/* ============================= */
+/* HIGHLIGHTS / FIRST PAGE       */
+/* ============================= */
+.page {
+    display: none;
+}
+
+#highlightsPage {
+    display: block;
+}
+
+.highlight-header {
+    background: #8e24aa;
+    color: white;
+    padding: 35px 20px;
+    text-align: center;
+}
+
+.highlight-header h1 {
+    margin: 0;
+    font-size: 44px;
+}
+
+.highlight-header p {
+    margin: 5px 0 0;
+    font-size: 16px;
+}
+
+.nav-btn {
+    background: #ce93d8;
+    color: #4a148c;
+    border: none;
+    padding: 13px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 28px;
+}
+
+.nav-btn:hover {
+    background: #e1bee7;
+}
+
+.highlight-container {
+    width: 92%;
+    max-width: 1100px;
+    margin: 35px auto;
+}
+
+.highlight-container h2 {
+    text-align: center;
+    color: #6a1b9a;
+    font-size: 34px;
+    margin-bottom: 20px;
+}
+
+.highlight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.highlight-item {
+    background: #f3d9f8;
+    padding: 22px 32px;
+    min-height: 160px;
+    display: flex;
+    align-items: center;
+}
+
+.image-placeholder {
+    width: 150px;
+    height: 115px;
+    background: #d3d3d3;
+}
+
+/* ============================= */
+/* CONFIRMATION ALERT            */
+/* ============================= */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.15);
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.confirm-modal {
+     width: 100%;
+     max-width: 570px;
+     background: white;
+     margin-top: 0;
+    border-radius: 0;
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+     overflow: hidden;
+}
+
+.confirm-purple{
+    height: 48px;
+    background: #8e24aa;
+}
+
+.confrim-content {
+    padding: 18px 20px 10px;
+    text-align: left;
+}
+
+.cofirm-content {
+    margin: 0;
+    font-size: 18px;
+    color: #222;
+}
+
+.confirm-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    padding: 0 20px 10px;
+}
+
+.confirm-buttons button {
+    background: #8e24aa;
+    color: white;
+    border: none;
+    padding: 7px 20px;
+    border-radius: 3px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+.confirm-buttons button:hover {
+    background: #6a1b9a;
+}
+
+/* ============================= */
+/* SUCCESS NOTIFICATION          */
+/* ============================= */
+.success-modal {
+    width: 90%;
+     max-width: 570px;
+     background: white;
+     padding: 45px 35px 30px;
+     text-align: center;
+     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+}
+
+.success-modal h2 {
+     margin: 0 0 35px;
+     color: #6a1b9a;
+     font-size: 32px;
+     line-height: 1.1;
+}
+ 
+.success-modal button {
+     background: #8e24aa;
+     color: white;
+     border: none;
+     padding: 9px 25px;
+     border-radius: 4px;
+     cursor: pointer;
+     font-weight: normal;
+}
+ 
+.success-modal button:hover {
+     background: #6a1b9a;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+    .top-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        width: 95%;
+    }
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-group.full {
+        grid-column: 1;
+    }
+    .header h1 {
+        font-size: 25px;
+    }
+    .calendar-header button {
+        padding: 7px 9px;
+        font-size: 12px;
+    }
+    .day {
+        min-height: 40px;
+        padding: 8px 2px;
+        font-size: 12px;
+    }
+}
+
+/*Updated History design*/
+.history-box{
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba (0, 0, 0.08);
+    border-top: 5px solid #8e24aa;
+}
+
+.history-box h2 {
+    color: #6a1b9a;
+    margin-bottom: 5px;
+}
+
+.reservation-item {
+    background: #f5f3f5;
+    border-left: 3px solid #a020c0;
+    border-radius: 10px;
+    padding: 10px 18px;
+    margin: 12px 0;
+    color: black;
+}
+
+.reservation-item p {
+    margin: 0;
+}
+
+</style>
+</head>
+<body>
+
+    <!-- ============================= -->
+    <!-- FIRST PAGE: EVENT HIGHLIGHTS  -->
+    <!-- ============================= -->
+    <section id="highlightsPage" class="page">
+
+        <header class="highlight-header">
+            <h1>Event Management</h1>
+            <p>Event Reservation and Scheduling System</p>
+
+            <button class="nav-btn" onclick="showReservationPage()">
+                Schedule An Event
+            </button>
+        </header>
+
+        <main class="highlight-container">
+            <h2>Highlights from Past Events</h2>
+
+            <div class="highlight-list">
+                <div class="highlight-item">
+                    <div class="image-placeholder"></div>
+                </div>
+
+                <div class="highlight-item">
+                    <div class="image-placeholder"></div>
+                </div>
+
+                <div class="highlight-item">
+                    <div class="image-placeholder"></div>
+                </div>
+            </div>
+        </main>
+
+    </section>
+
+    <!-- ============================= -->
+    <!-- SECOND PAGE: RESERVATION      -->
+    <!-- ============================= -->
+    <section id="reservationPage" class="page">
+
+    <!-- HEADER -->
+<header class="header">
+    <h1>Event Management</h1>
+    <p> Event Reservation and Scheduling System </p>
+</header>
+
+<div class="container">
+
+    <!-- REGISTER + SCHEDULE -->
+    <div class="top-section">
+       
+        <!-- REGISTER -->
+        <div class="box">
+            <h2>Register</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="Brian Del Rosario">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="delninobrian@gmail.com">
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" id="number" placeholder="09212722744">
+                </div>
+                <div class="form-group">
+                    <label>Number of Pax</label>
+                    <input type="number" id="pax" placeholder="50" min="1">
+                </div>
+                <div class="form-group full">
+                    <label>What Event?</label>
+                    <select id="eventType">
+                        <option value="">
+                            Select Event
+                        </option>
+                        <option>Birthday</option>
+                        <option>Wedding</option>
+                        <option>Debut</option>
+                        <option>Corporate Event</option>
+                        <option>Meeting</option>
+                        <option>Seminar</option>
+                        <option>Christening</option>
+                        <option>Party</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label>Event Location</label>
+                    <input type="text" id="location" placeholder="Pasig City">
+                </div>
+                <div class="form-group">
+                    <label>Schedule</label>
+                    <input type="date" id="date">
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="time">
+                </div>
+                <div class="form-group full">
+                    <label>Event Description</label>
+                    <textarea
+                        id="description"
+                        placeholder="Tell us something about your event..."
+                    ></textarea>
+                </div>
+            </div>
+            <button class="form-button" onclick="secureEvent()"> Secure Event Slot </button>
+            <p id="message"></p>
+        </div>
+
+        <!-- SCHEDULE -->
+        <div class="box">
+            <h2>Schedule</h2>
+            <p>
+                Check the calendar to see which dates are
+                already reserved.
+            </p>
+            <div class="calendar-header">
+                <button onclick="previousMonth()"> Previous </button>
+                <h3 id="monthYear"></h3>
+                <button onclick="nextMonth()"> Next </button>
+            </div>
+            <div class="weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+            <div
+                id="calendar"
+                class="calendar">
+            </div>
+            <div class="legend">
+                <div class="legend-item">
+                    <div
+                        class="legend-box legend-booked">
+                    </div> Reserved </div>
+                <div class="legend-item">
+                    <div
+                        class="legend-box legend-available">
+                    </div> Available </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div class="box history-box">
+        <h2>History</h2>
+        <p> Previous and secured event reservations. </p>
+        <div id="reservationList"></div>
+    </div>
+</div>
+
+</section>
+
+<!-- ============================= -->
+<!-- CONFIRMATION ALERT            -->
+<!-- ============================= -->
+642 <div id="confirmModal" class="modal-overlay">
+
+     <div class="confirm-modal">
+ 
+         <div class="confirm-purple"></div>
+ 
+         <div class="confirm-content">
+             <p>Are you sure?</p>
+         </div>
+ 
+         <div class="confirm-buttons">
+ 
+             <button onclick="cancelReservation()">
+                 Cancel
+             </button>
+
+             <button onclick="confirmReservation()">
+                 Yes
+             </button> 
+         </div> 
+     </div>
+</div>
+
+<!-- ============================= -->
+<!-- SUCCESS NOTIFICATION          -->
+<!-- ============================= -->
+<div id="successModal" class="modal-overlay">
+ 
+     <div class="success-modal">
+ 
+         <h2>Thank you for using our service for your event!</h2>
+ 
+         <button onclick="closeSuccessModal()">
+             Okay
+         </button> 
+     </div>
+</div>
+
+<script>
+
+/* VARIABLES */
+/* reservations stores all event reservations.
+   localStorage allows the reservations to remain
+   even after refreshing the browser. */
+var reservations =
+    JSON.parse(
+        localStorage.getItem("eventReservations")
+    ) || [];
+
+/* currentDate controls which month is currently
+    displayed on the calendar. */
+var currentDate = new Date();
+/*
+* pendingReservation temporarily stores
+* the reservation before the user clicks YES.
+*/
+var pendingReservation = null;
+
+/* SAVE RESERVATIONS */
+function saveReservations() {
+    localStorage.setItem( "eventReservations", JSON.stringify(reservations));
+}
+
+/* SECURE EVENT */
+function secureEvent() {
+
+    /* Get values from the form */
+    var name = document.getElementById("name").value.trim();
+    var email = document.getElementById("email").value.trim();
+    var number = document.getElementById("number").value.trim();
+    var pax = document.getElementById("pax").value;
+    var eventType = document.getElementById("eventType").value;
+    var location = document.getElementById("location").value.trim();
+    var date = document.getElementById("date").value;
+    var time = document.getElementById("time").value;
+    var description = document.getElementById("description").value.trim();
+    var message = document.getElementById("message");
+
+    /* Check if required fields are empty */
+    if (
+        name === "" ||
+        email === "" ||
+        number === "" ||
+        pax === "" ||
+        eventType === "" ||
+        location === "" ||
+        date === "" ||
+        time === ""
+    ) {
+        message.style.color = "red";
+        message.textContent = "Please complete all required fields.";
+        return;
+    }
+
+    /* Check if selected date is already reserved */
+    var alreadyBooked =
+        reservations.some(
+            function(reservation) {
+                return reservation.date === date;
+            }
+        );
+    if (alreadyBooked) {
+        message.style.color = "red";
+        message.textContent = "This date is already reserved.";
+        return;
+    }
+
+    /*
+* Store the reservation temporarily.
+* It is NOT saved yet.
+*/
+     pendingReservation = {
+         name: name,
+         email: email,
+         number: number,
+         pax: pax,
+         eventType: eventType,
+         location: location,
+         date: date,
+         time: time,
+         description: description
+     };
+ 
+/*
+* Show the confirmation alert.
+*/
+     document.getElementById("confirmModal")
+         .style.display = "flex";
+}
+
+/* ============================= */
+/* CANCEL CONFIRMATION           */
+/* ============================= */
+ 
+function cancelReservation() {
+
+    /*
+* Delete the temporary reservation.
+* Nothing is saved.
+*/
+     pendingReservation = null;
+
+/*
+* Close confirmation alert.
+* User stays on reservation page.
+*/
+     document.getElementById("confirmModal")
+         .style.display = "none";
+}
+ 
+/* ============================= */
+/* YES - CONFIRM RESERVATION     */
+/* ============================= */
+ 
+function confirmReservation() {
+ 
+/*
+* Make sure there is a reservation
+* waiting for confirmation.
+*/
+     if (pendingReservation === null) {
+         return;
+     }
+/*
+* Add the reservation to the list.
+*/
+     reservations.push(pendingReservation);
+ 
+/*
+* Save the reservation to localStorage.
+*/
+     saveReservations();
+ 
+/*
+* Remove temporary reservation.
+*/
+     pendingReservation = null;
+
+/*
+* Close confirmation alert.
+*/
+     document.getElementById("confirmModal")
+         .style.display = "none";
+ 
+/* ============================= */
+/* CLEAR FORM                    */
+/* ============================= */
+ 
+     document.getElementById("name").value = "";
+     document.getElementById("email").value = "";
+     document.getElementById("number").value = "";
+     document.getElementById("pax").value = "";
+     document.getElementById("eventType").value = "";
+     document.getElementById("location").value = "";
+     document.getElementById("date").value = "";
+     document.getElementById("time").value = "";
+     document.getElementById("description").value = "";
+ 
+     document.getElementById("message").textContent = "";
+ 
+/*
+* Update calendar and history.
+*/
+     renderCalendar();
+     displayReservations();
+
+/*
+* Show success notification.
+*/
+     document.getElementById("successModal")
+         .style.display = "flex";
+}
+ 
+/* ============================= */
+/* CLOSE SUCCESS NOTIFICATION    */
+/* ============================= */
+
+function closeSuccessModal() {
+ 
+     document.getElementById("successModal")
+         .style.display = "none";
+}
+
+/* CALENDAR */
+function renderCalendar() {
+    var calendar = document.getElementById("calendar");
+    var monthYear = document.getElementById("monthYear");
+    
+        /* Clear previous calendar */
+    calendar.innerHTML = "";
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth();
+    
+        /* Month name */
+    var monthName = currentDate.toLocaleString("default",{month: "long"});
+        monthYear.textContent = monthName + " " + year;
+    
+        /* First day of month */
+    var firstDay =
+        new Date( year, month, 1).getDay();
+    
+        /* Number of days */
+    var daysInMonth =
+        new Date( year, month + 1, 0).getDate();
+   
+        /* Empty spaces before first day */
+    for (
+        var i = 0;
+        i < firstDay;
+        i++
+    ) {
+        var empty = document.createElement("div");
+            empty.classList.add("day");
+            empty.classList.add("empty-day");
+            calendar.appendChild(empty);
+    }
+    
+    /* Create days */
+    for (
+        var dayNumber = 1;
+        dayNumber <= daysInMonth;
+        dayNumber++
+    ) {
+        var day = document.createElement("div");
+            day.classList.add("day");
+            day.textContent = dayNumber;
+        
+            /* Create YYYY-MM-DD format */
+        var monthValue =
+            String(month + 1).padStart(2, "0");
+        var dayValue =
+            String(dayNumber).padStart(2, "0");
+
+            /*
+          * IMPORTANT:
+          * let allows each calendar day
+          * to remember its own date.
+          */
+        let dateValue = year + "-" + monthValue + "-" + dayValue;
+        
+            /* Check if date is booked */
+        var booked =
+            reservations.some(
+                function(reservation) {
+                    return reservation.date === dateValue;
+                }
+            );
+        if (booked) {
+            day.classList.add("booked");
+            day.title = "This date is already reserved.";
+        }
+        
+        /* Check if today */
+        var today = new Date();
+        var todayString = today.getFullYear() +"-" +
+            String( today.getMonth() + 1
+            ).padStart(2, "0") + "-" +
+            String( today.getDate()
+            ).padStart(2, "0");
+        if (dateValue === todayString) {
+            day.classList.add("today");
+        }
+       
+        /* Click available date */
+        if (!booked) {
+            day.onclick = function() { 
+                document.getElementById("date").value = dateValue;
+
+                /*
+                * Remove previous selected date
+                */
+                    /*day.classList.add("selected");*/
+                document.querySelectorAll(".dady.selected").forEach(
+                    function(selectedDay){
+                        selectedDay.classList.remove("selected");
+                    }
+                );
+                /*
+                *Highlight selected date
+                */
+                day.classList.add("selected");
+        };
+     }
+
+        calendar.appendChild(day);
+    }
+}
+
+/* PREVIOUS MONTH */
+function previousMonth() {
+    currentDate.setMonth(
+        currentDate.getMonth() - 1
+    );
+    renderCalendar();
+}
+
+/* NEXT MONTH */
+function nextMonth() {
+    currentDate.setMonth(
+        currentDate.getMonth() + 1
+    );
+    renderCalendar();
+}
+
+/* DISPLAY HISTORY */
+function displayReservations() {
+    var list = document.getElementById("reservationList");
+   
+    /* No reservations */
+    if (reservations.length === 0) {
+        list.innerHTML =
+            '<p class="empty">No event reservations yet.</p>';
+        return;
+    }
+    
+    /* Display history summary */
+    list.innerHTML = "";
+
+    reservations.forEach(function(reservation) {
+            const item = document.createElement("div");
+            item.className = "reservation-item";
+
+            item.innerHTML= `
+            <p>${reservation.date}</p>
+            <p>Event Secured!</p>
+            `;
+            list.appendChild(item);
+        }
+    );
+}
+
+
+/* ============================= */
+/* PAGE NAVIGATION               */
+/* ============================= */
+function showReservationPage() {
+    document.getElementById("highlightsPage").style.display = "none";
+    document.getElementById("reservationPage").style.display = "block";
+}
+
+/* START THE SYSTEM */
+renderCalendar();
+displayReservations();
+</script>
+</body>
+</html>
